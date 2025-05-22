@@ -1,10 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
-		<TargetFramework>net8.0</TargetFramework>
-		<ImplicitUsings>enable</ImplicitUsings>
-		<Nullable>enable</Nullable>
-	</PropertyGroup>
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
 
 	<!-- NuGet Metadata -->
 	<PropertyGroup>
@@ -22,20 +22,20 @@
 		<!-- opsiyonel -->
 	</PropertyGroup>
 
-	<ItemGroup>
-		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.4" />
-		<PackageReference Include="OPCFoundation.NetStandard.Opc.Ua" Version="1.5.376.213" />
-		<PackageReference Include="OPCFoundation.NetStandard.Opc.Ua.Core" Version="1.5.376.213" />
-	</ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.4" />
+    <PackageReference Include="OPCFoundation.NetStandard.Opc.Ua" Version="1.5.376.213" />
+    <PackageReference Include="OPCFoundation.NetStandard.Opc.Ua.Core" Version="1.5.376.213" />
+  </ItemGroup>
 
-	<ItemGroup>
-		<Folder Include="Certificates\Issuers\" />
-		<Folder Include="Certificates\Rejected\" />
-		<Folder Include="Certificates\TrustedPeers\" />
-		<Folder Include="Certificates\Own\" />
+  <ItemGroup>
+    <Folder Include="Certificates\Issuers\" />
+    <Folder Include="Certificates\Rejected\" />
+    <Folder Include="Certificates\TrustedPeers\" />
+    <Folder Include="Certificates\Own\" />
 		<None Include="README.md" Pack="true" PackagePath="" />
 		<None Include="LICENSE" Pack="true" PackagePath="" />
 		<None Include="icon.png" Pack="true" PackagePath="" />
-	</ItemGroup>
+  </ItemGroup>
 
 </Project>

@@ -148,6 +148,7 @@ public class OpcUaService : IOpcUaService
         }
     }
 
+
     public async Task WriteNodeAsync(string nodeId, object value, CancellationToken cancellationToken)
     {
         if (_session == null)
