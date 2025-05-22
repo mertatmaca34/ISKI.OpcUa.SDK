@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ISKI.OpcUa.Client.Models;
 
-namespace IskiOpcSdk.Interfaces;
+namespace ISKI.OpcUa.Client.Interfaces;
 
 public interface IOpcUaService
 {
     Task ConnectAsync(string endpointUrl);
-    Task<string?> ReadNodeAsync(string nodeId);
+    Task DisconnectAsync();
+    Task<ConnectionResult<NodeReadResult>> ReadNodeAsync(string nodeId);
     Task WriteNodeAsync(string nodeId, object value, CancellationToken cancellationToken);
     List<string> Browse(string nodeId);
     Task<List<string>> FindServersOnLocalNetworkAsync();

@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.13.35806.99
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IskiOpcSdk", "IskiOpcSdk\IskiOpcSdk.csproj", "{7196DB48-93D1-4D1A-B893-6F8C15B6C7DE}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Api", "Api\Api.csproj", "{D1CE4C2E-91E0-470C-A74A-2F9F567791DF}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Çözüm Öğeleri", "Çözüm Öğeleri", "{AC80F682-3D55-C8F8-4895-A4A9EDD49434}"
@@ -12,20 +10,22 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Çözüm Öğeleri", "Çöz
 		README.md = README.md
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ISKI.OpcUa.Client", "ISKI.OpcUa.Client\ISKI.OpcUa.Client.csproj", "{AF577A99-ED96-4477-4CC6-D00B5E58D5D6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{7196DB48-93D1-4D1A-B893-6F8C15B6C7DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7196DB48-93D1-4D1A-B893-6F8C15B6C7DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7196DB48-93D1-4D1A-B893-6F8C15B6C7DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7196DB48-93D1-4D1A-B893-6F8C15B6C7DE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D1CE4C2E-91E0-470C-A74A-2F9F567791DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D1CE4C2E-91E0-470C-A74A-2F9F567791DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D1CE4C2E-91E0-470C-A74A-2F9F567791DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D1CE4C2E-91E0-470C-A74A-2F9F567791DF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AF577A99-ED96-4477-4CC6-D00B5E58D5D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AF577A99-ED96-4477-4CC6-D00B5E58D5D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AF577A99-ED96-4477-4CC6-D00B5E58D5D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AF577A99-ED96-4477-4CC6-D00B5E58D5D6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

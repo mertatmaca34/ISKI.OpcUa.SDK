@@ -1,53 +1,196 @@
-﻿using IskiOpcSdk.Interfaces;
+﻿using ISKI.OpcUa.Client.Interfaces;
+using ISKI.OpcUa.Client.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class OpcController(IOpcUaService opcService) : ControllerBase
+public class OpcController(
+    ILogger<OpcController> logger,
+    IConnectionService connectionService,
+    INodeReadWriteService readWriteService,
+    INodeBrowseService browseService,
+    IDiscoveryService discoveryService
+) : ControllerBase
 {
-    private static bool _connected = false;
+    private static bool _connected;
 
     [HttpPost("connect")]
-    public async Task<IActionResult> Connect([FromQuery] string endpoint)
+    public async Task<ActionResult<ConnectionResult<object>>> Connect([FromQuery] string endpoint)
     {
-        if (_connected)
-            return Ok("Zaten bağlı");
+        try
+        {
+            if (_connected)
+            {
+                return Ok(new ConnectionResult<object>
+                {
+                    ServerStatus = "AlreadyConnected",
+                    Message = "Zaten bağlı.",
+                    Data = null
+                });
+            }
 
-        await opcService.ConnectAsync(endpoint);
-        _connected = true;
-        return Ok("OPC UA bağlantısı kuruldu.");
+            await connectionService.ConnectAsync(endpoint);
+            _connected = true;
+
+            logger.LogInformation("OPC UA bağlantısı kuruldu. Endpoint: {endpoint}", endpoint);
+
+            return Ok(new ConnectionResult<object>
+            {
+                ServerStatus = "Good",
+                Message = "Bağlantı kuruldu.",
+                Data = null
+            });
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "OPC UA bağlantısı kurulamadı.");
+            return StatusCode(500, new ConnectionResult<object>
+            {
+                ServerStatus = "Exception",
+                Message = $"Bağlantı kurulamadı: {ex.Message}",
+                Data = null
+            });
+        }
     }
 
     [HttpGet("read")]
-    public async Task<IActionResult> ReadNode([FromQuery] string nodeId)
+    public async Task<ActionResult<ConnectionResult<NodeReadResult>>> ReadNode([FromQuery] string nodeId)
     {
-        var value = await opcService.ReadNodeAsync(nodeId);
-        return Ok(new { nodeId, value });
+        var result = await readWriteService.ReadNodeAsync(nodeId);
+
+        var response = new ConnectionResult<NodeReadResult>
+        {
+            ServerStatus = result.ServerStatus,
+            Message = result.Message,
+            Timestamp = result.Timestamp,
+            Data = result.Data
+        };
+
+        if (!response.Success)
+        {
+            logger.LogWarning("ReadNode başarısız: {nodeId}, Status: {status}", nodeId, result.Data.NodeStatus);
+            return BadRequest(response);
+        }
+
+        logger.LogInformation("ReadNode başarılı: {nodeId}, Value: {value}", nodeId, result.Data.Value);
+        return Ok(response);
     }
 
     [HttpPost("write")]
-    public async Task<IActionResult> WriteNode(
+    public async Task<ActionResult<ConnectionResult<object>>> WriteNode(
         [FromQuery] string nodeId,
         [FromQuery] string value,
         CancellationToken cancellationToken)
     {
-        await opcService.WriteNodeAsync(nodeId, value, cancellationToken);
-        return Ok("Yazma işlemi başarılı.");
+        var result = await readWriteService.WriteNodeAsync(nodeId, value, cancellationToken);
+
+        var response = new ConnectionResult<object>
+        {
+            ServerStatus = result.ServerStatus,
+            Message = result.Message,
+            Timestamp = result.Timestamp,
+            Data = null
+        };
+
+        if (!response.Success)
+        {
+            logger.LogWarning("WriteNode başarısız: {nodeId}, Status: {status}", nodeId, result.ServerStatus);
+            return BadRequest(response);
+        }
+
+        logger.LogInformation("WriteNode başarılı: {nodeId} = {value}", nodeId, value);
+        return Ok(response);
     }
 
     [HttpGet("browse")]
-    public IActionResult Browse([FromQuery] string nodeId = "i=85")
+    public ActionResult<ConnectionResult<List<string>>> Browse([FromQuery] string nodeId = "i=85")
     {
-        var nodes = opcService.Browse(nodeId);
-        return Ok(nodes);
+        try
+        {
+            var nodes = browseService.Browse(nodeId);
+
+            logger.LogInformation("Browse: Node {nodeId}, Bulunan {count}", nodeId, nodes.Count);
+
+            return Ok(new ConnectionResult<List<string>>
+            {
+                ServerStatus = "Good",
+                Message = "Browse işlemi başarılı.",
+                Data = nodes
+            });
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Browse hatası.");
+
+            return StatusCode(500, new ConnectionResult<List<string>>
+            {
+                ServerStatus = "Exception",
+                Message = $"Browse işlemi hatası: {ex.Message}",
+                Data = null
+            });
+        }
     }
 
     [HttpGet("discover")]
-    public async Task<IActionResult> Discover()
+    public async Task<ActionResult<ConnectionResult<List<string>>>> Discover()
     {
-        var servers = await opcService.FindServersOnLocalNetworkAsync();
-        return Ok(servers);
+        try
+        {
+            var servers = await discoveryService.FindServersOnLocalNetworkAsync();
+
+            logger.LogInformation("Discover tamamlandı. Sunucu sayısı: {count}", servers.Count);
+
+            return Ok(new ConnectionResult<List<string>>
+            {
+                ServerStatus = "Good",
+                Message = "Keşif başarılı.",
+                Data = servers
+            });
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Discover hatası.");
+
+            return StatusCode(500, new ConnectionResult<List<string>>
+            {
+                ServerStatus = "Exception",
+                Message = $"Sunucu keşfi hatası: {ex.Message}",
+                Data = null
+            });
+        }
+    }
+
+    [HttpPost("disconnect")]
+    public async Task<ActionResult<ConnectionResult<object>>> Disconnect()
+    {
+        try
+        {
+            await connectionService.DisconnectAsync();
+            _connected = false;
+
+            logger.LogInformation("Bağlantı kesildi.");
+
+            return Ok(new ConnectionResult<object>
+            {
+                ServerStatus = "Disconnected",
+                Message = "Bağlantı kesildi.",
+                Data = null
+            });
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Disconnect hatası.");
+
+            return StatusCode(500, new ConnectionResult<object>
+            {
+                ServerStatus = "Exception",
+                Message = $"Bağlantı kesilemedi: {ex.Message}",
+                Data = null
+            });
+        }
     }
 }

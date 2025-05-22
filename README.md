@@ -1,6 +1,6 @@
-﻿# IskiOpcSdk
+﻿# ISKI.OpcUa.Client
 
-**IskiOpcSdk** is a reusable OPC UA client SDK for .NET, designed to provide high-performance and fault-tolerant industrial communication.
+**ISKI.OpcUa.Client** is a reusable OPC UA client SDK for .NET, designed to provide high-performance and fault-tolerant industrial communication.
 
 ## 📦 Install via NuGet
 
