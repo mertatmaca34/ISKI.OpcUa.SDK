@@ -23,7 +23,8 @@ public class OpcController(
     {
         try
         {
-            if (_connected)
+            // Gerçekten bağlantı var mı kontrol et
+            if (_connected && connectionService.Session is not null && connectionService.Session.Connected)
             {
                 return Ok(new ConnectionResult<object>
                 {
@@ -107,7 +108,7 @@ public class OpcController(
     }
 
     [HttpGet("browse")]
-    public ActionResult<ConnectionResult<List<string>>> Browse([FromQuery] string nodeId = "i=85")
+    public ActionResult<ConnectionResult<List<NodeBrowseResult>>> Browse([FromQuery] string nodeId = "i=85")
     {
         try
         {
@@ -115,7 +116,7 @@ public class OpcController(
 
             logger.LogInformation("Browse: Node {nodeId}, Bulunan {count}", nodeId, nodes.Count);
 
-            return Ok(new ConnectionResult<List<string>>
+            return Ok(new ConnectionResult<List<NodeBrowseResult>>
             {
                 ServerStatus = "Good",
                 Message = "Browse işlemi başarılı.",
@@ -126,7 +127,7 @@ public class OpcController(
         {
             logger.LogError(ex, "Browse hatası.");
 
-            return StatusCode(500, new ConnectionResult<List<string>>
+            return StatusCode(500, new ConnectionResult<List<NodeBrowseResult>>
             {
                 ServerStatus = "Exception",
                 Message = $"Browse işlemi hatası: {ex.Message}",
@@ -134,6 +135,7 @@ public class OpcController(
             });
         }
     }
+
 
     [HttpGet("discover")]
     public async Task<ActionResult<ConnectionResult<List<string>>>> Discover()

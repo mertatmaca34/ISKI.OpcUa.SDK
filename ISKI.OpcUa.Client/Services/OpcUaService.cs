@@ -24,6 +24,6 @@ public class OpcUaService : IOpcUaService
     public Task DisconnectAsync() => _connection.DisconnectAsync();
     public Task<ConnectionResult<NodeReadResult>> ReadNodeAsync(string nodeId) => _readWrite.ReadNodeAsync(nodeId);
     public Task WriteNodeAsync(string nodeId, object value, CancellationToken ct) => _readWrite.WriteNodeAsync(nodeId, value, ct);
-    public List<string> Browse(string nodeId) => _browser.Browse(nodeId);
+    public List<NodeBrowseResult> Browse(string nodeId) => _browser.Browse(nodeId);
     public Task<List<string>> FindServersOnLocalNetworkAsync() => _discovery.FindServersOnLocalNetworkAsync();
 }

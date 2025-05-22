@@ -8,11 +8,11 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddIskiOpcUaClient(this IServiceCollection services)
     {
-        services.AddScoped<IConnectionService, ConnectionService>();
-        services.AddScoped<INodeReadWriteService, NodeReadWriteService>();
-        services.AddScoped<INodeBrowseService, NodeBrowseService>();
-        services.AddScoped<IDiscoveryService, DiscoveryService>();
-        services.AddScoped<IOpcUaService, OpcUaService>();
+        services.AddSingleton<IConnectionService, ConnectionService>();
+        services.AddSingleton<INodeReadWriteService, NodeReadWriteService>();
+        services.AddSingleton<INodeBrowseService, NodeBrowseService>();
+        services.AddSingleton<IDiscoveryService, DiscoveryService>();
+        services.AddSingleton<IOpcUaService, OpcUaService>();
 
         return services;
     }

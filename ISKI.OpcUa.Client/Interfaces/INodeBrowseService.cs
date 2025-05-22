@@ -1,6 +1,8 @@
-﻿namespace ISKI.OpcUa.Client.Interfaces;
+﻿using ISKI.OpcUa.Client.Models;
+
+namespace ISKI.OpcUa.Client.Interfaces;
 
 public interface INodeBrowseService
 {
-    List<string> Browse(string nodeId);
+    List<NodeBrowseResult> Browse(string nodeId);
 }

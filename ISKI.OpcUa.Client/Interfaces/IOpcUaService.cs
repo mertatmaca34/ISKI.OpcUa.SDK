@@ -8,6 +8,6 @@ public interface IOpcUaService
     Task DisconnectAsync();
     Task<ConnectionResult<NodeReadResult>> ReadNodeAsync(string nodeId);
     Task WriteNodeAsync(string nodeId, object value, CancellationToken cancellationToken);
-    List<string> Browse(string nodeId);
+    List<NodeBrowseResult> Browse(string nodeId);
     Task<List<string>> FindServersOnLocalNetworkAsync();
 }

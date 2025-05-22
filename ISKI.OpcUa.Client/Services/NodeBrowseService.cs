@@ -2,6 +2,7 @@
 using Opc.Ua.Client;
 using Microsoft.Extensions.Logging;
 using ISKI.OpcUa.Client.Interfaces;
+using ISKI.OpcUa.Client.Models;
 
 namespace ISKI.OpcUa.Client.Services;
 
@@ -16,15 +17,23 @@ public class NodeBrowseService : INodeBrowseService
         _connection = connection;
     }
 
-    public List<string> Browse(string nodeId)
+    public List<NodeBrowseResult> Browse(string nodeId)
     {
         var session = _connection.Session;
-        var references = new List<string>();
+        var results = new List<NodeBrowseResult>();
 
         if (session == null)
         {
             _logger.LogWarning("Browse çağrısı yapıldı ama oturum yok.");
-            return new List<string> { "Hata: OPC oturumu bağlı değil." };
+            return new List<NodeBrowseResult>
+        {
+            new NodeBrowseResult
+            {
+                DisplayName = "Oturum yok",
+                NodeId = "N/A",
+                NodeClass = "Error"
+            }
+        };
         }
 
         try
@@ -42,27 +51,43 @@ public class NodeBrowseService : INodeBrowseService
             session.Browse(
                 null, null, 0,
                 new BrowseDescriptionCollection { browseDesc },
-                out var results, out var diagnosticInfos
+                out var browseResults, out var diagnosticInfos
             );
 
-            foreach (var reference in results[0].References)
+            foreach (var reference in browseResults[0].References)
             {
-                var refStr = $"{reference.DisplayName.Text} (NodeId: {reference.NodeId})";
-                references.Add(refStr);
+                results.Add(new NodeBrowseResult
+                {
+                    DisplayName = reference.DisplayName.Text,
+                    NodeId = reference.NodeId.ToString(),
+                    NodeClass = reference.NodeClass.ToString()
+                });
             }
 
-            _logger.LogInformation("Browse işlemi tamamlandı. {count} node bulundu.", references.Count);
+            _logger.LogInformation("Browse işlemi tamamlandı. {count} node bulundu.", results.Count);
 
-            if (references.Count == 0)
-                references.Add("Geçerli ama alt node bulunamadı.");
+            if (results.Count == 0)
+            {
+                results.Add(new NodeBrowseResult
+                {
+                    DisplayName = "Alt node bulunamadı",
+                    NodeId = nodeId,
+                    NodeClass = "Empty"
+                });
+            }
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Browse sırasında hata oluştu: {nodeId}", nodeId);
-            references.Clear();
-            references.Add($"Browse işlemi başarısız: {ex.Message}");
+            results.Clear();
+            results.Add(new NodeBrowseResult
+            {
+                DisplayName = $"Hata: {ex.Message}",
+                NodeId = nodeId,
+                NodeClass = "Exception"
+            });
         }
 
-        return references;
+        return results;
     }
 }
