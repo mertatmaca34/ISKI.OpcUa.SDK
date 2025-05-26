@@ -1,7 +1,5 @@
 ﻿namespace ISKI.OpcUa.Client.Exceptions;
 
-public class OpcServiceException : Exception
+public class OpcServiceException(string message, Exception? inner = null) : Exception(message, inner)
 {
-    public OpcServiceException(string message, Exception? inner = null)
-        : base(message, inner) { }
 }

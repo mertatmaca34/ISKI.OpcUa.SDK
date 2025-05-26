@@ -7,25 +7,16 @@ using ISKI.OpcUa.Client.Models;
 
 namespace ISKI.OpcUa.Client.Services;
 
-public class NodeReadWriteService : INodeReadWriteService
+public class NodeReadWriteService(ILogger<NodeReadWriteService> logger, IConnectionService connection) : INodeReadWriteService
 {
-    private readonly ILogger<NodeReadWriteService> _logger;
-    private readonly IConnectionService _connection;
-
-    public NodeReadWriteService(ILogger<NodeReadWriteService> logger, IConnectionService connection)
-    {
-        _logger = logger;
-        _connection = connection;
-    }
-
     public async Task<ConnectionResult<NodeReadResult>> ReadNodeAsync(string nodeId)
     {
-        var session = _connection.Session;
+        var session = connection.Session;
 
         if (session == null || !session.Connected)
         {
             var msg = "OPC UA oturumu bağlı değil.";
-            _logger.LogWarning("ReadNode - {msg}", msg);
+            logger.LogWarning("ReadNode - {Message}", msg);
             return new ConnectionResult<NodeReadResult>
             {
                 ServerStatus = "Disconnected",
@@ -62,16 +53,16 @@ public class NodeReadWriteService : INodeReadWriteService
             };
 
             if (response.Success)
-                _logger.LogInformation("ReadNode başarılı: {nodeId} = {value}", nodeId, result.Value);
+                logger.LogInformation("ReadNode başarılı: {NodeId} = {Value}", nodeId, result.Value);
             else
-                _logger.LogWarning("ReadNode başarısız: {nodeId}, Status: {status}", nodeId, result.NodeStatus);
+                logger.LogWarning("ReadNode başarısız: {NodeId}, Status: {NodeStatus}", nodeId, result.NodeStatus);
 
             return response;
         }
         catch (Exception ex)
         {
             var msg = $"ReadNode exception: {ex.Message}";
-            _logger.LogError(ex, msg);
+            logger.LogError(ex, "ReadNode exception: {Message}", ex.Message);
             return new ConnectionResult<NodeReadResult>
             {
                 ServerStatus = "Exception",
@@ -88,17 +79,16 @@ public class NodeReadWriteService : INodeReadWriteService
 
     public async Task<ConnectionResult<object>> WriteNodeAsync(string nodeId, object value, CancellationToken cancellationToken)
     {
-        var session = _connection.Session;
+        var session = connection.Session;
 
         if (session == null)
         {
             var msg = "OPC UA oturumu bağlı değil.";
-            _logger.LogWarning("WriteNode - {msg}", msg);
+            logger.LogWarning("WriteNode - {Message}", msg);
             return new ConnectionResult<object>
             {
                 ServerStatus = "Disconnected",
                 Message = msg,
-                Data = null
             };
         }
 
@@ -111,7 +101,7 @@ public class NodeReadWriteService : INodeReadWriteService
                 Value = new DataValue(new Variant(value))
             };
 
-            var result = await session.WriteAsync(null, new WriteValueCollection { writeValue }, cancellationToken);
+            var result = await session.WriteAsync(null, [writeValue], cancellationToken);
             var status = result.Results.FirstOrDefault();
 
             var response = new ConnectionResult<object>
@@ -120,25 +110,23 @@ public class NodeReadWriteService : INodeReadWriteService
                 Message = StatusCode.IsGood(status)
                     ? "Yazma işlemi başarılı."
                     : $"Yazma başarısız. OPC Status: {status}",
-                Data = null
             };
 
             if (response.Success)
-                _logger.LogInformation("WriteNode başarılı: {nodeId} = {value}", nodeId, value);
+                logger.LogInformation("WriteNode başarılı: {NodeId} = {Value}", nodeId, value);
             else
-                _logger.LogWarning("WriteNode başarısız: {nodeId}, Status: {status}", nodeId, status);
+                logger.LogWarning("WriteNode başarısız: {NodeId}, Status: {Status}", nodeId, status);
 
             return response;
         }
         catch (Exception ex)
         {
             var msg = $"WriteNode exception: {ex.Message}";
-            _logger.LogError(ex, msg);
+            logger.LogError(ex, "WriteNode exception: {Message}", ex.Message);
             return new ConnectionResult<object>
             {
                 ServerStatus = "Exception",
                 Message = msg,
-                Data = null
             };
         }
     }

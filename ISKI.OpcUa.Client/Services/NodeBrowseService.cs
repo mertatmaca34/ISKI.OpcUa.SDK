@@ -6,34 +6,24 @@ using ISKI.OpcUa.Client.Models;
 
 namespace ISKI.OpcUa.Client.Services;
 
-public class NodeBrowseService : INodeBrowseService
+public class NodeBrowseService(ILogger<NodeBrowseService> logger, IConnectionService connection) : INodeBrowseService
 {
-    private readonly ILogger<NodeBrowseService> _logger;
-    private readonly IConnectionService _connection;
-
-    public NodeBrowseService(ILogger<NodeBrowseService> logger, IConnectionService connection)
-    {
-        _logger = logger;
-        _connection = connection;
-    }
-
     public List<NodeBrowseResult> Browse(string nodeId)
     {
-        var session = _connection.Session;
+        var session = connection.Session;
         var results = new List<NodeBrowseResult>();
 
         if (session == null)
         {
-            _logger.LogWarning("Browse çağrısı yapıldı ama oturum yok.");
-            return new List<NodeBrowseResult>
-        {
-            new NodeBrowseResult
-            {
+            logger.LogWarning("Browse çağrısı yapıldı ama oturum yok.");
+            return
+        [
+            new() {
                 DisplayName = "Oturum yok",
                 NodeId = "N/A",
                 NodeClass = "Error"
             }
-        };
+        ];
         }
 
         try
@@ -50,7 +40,7 @@ public class NodeBrowseService : INodeBrowseService
 
             session.Browse(
                 null, null, 0,
-                new BrowseDescriptionCollection { browseDesc },
+                [browseDesc],
                 out var browseResults, out var diagnosticInfos
             );
 
@@ -64,7 +54,7 @@ public class NodeBrowseService : INodeBrowseService
                 });
             }
 
-            _logger.LogInformation("Browse işlemi tamamlandı. {count} node bulundu.", results.Count);
+            logger.LogInformation("Browse işlemi tamamlandı. {count} node bulundu.", results.Count);
 
             if (results.Count == 0)
             {
@@ -78,7 +68,7 @@ public class NodeBrowseService : INodeBrowseService
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Browse sırasında hata oluştu: {nodeId}", nodeId);
+            logger.LogError(ex, "Browse sırasında hata oluştu: {nodeId}", nodeId);
             results.Clear();
             results.Add(new NodeBrowseResult
             {

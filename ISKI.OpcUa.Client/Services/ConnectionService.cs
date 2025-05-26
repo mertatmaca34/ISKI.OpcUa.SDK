@@ -49,7 +49,7 @@ public class ConnectionService : IConnectionService
                 AutoAcceptUntrustedCertificates = true,
                 RejectSHA1SignedCertificates = false
             },
-            TransportConfigurations = new TransportConfigurationCollection(),
+            TransportConfigurations = [],
             TransportQuotas = new TransportQuotas { OperationTimeout = 15000 },
             ClientConfiguration = new ClientConfiguration { DefaultSessionTimeout = 60000 }
         };
@@ -64,7 +64,7 @@ public class ConnectionService : IConnectionService
         {
             _logger.LogInformation("OPC bağlantı kuruluyor: {endpoint}", endpointUrl);
 
-            var selectedEndpoint = CoreClientUtils.SelectEndpoint(endpointUrl, false);
+            var selectedEndpoint = CoreClientUtils.SelectEndpoint(_config, endpointUrl, false);
             var endpointConfiguration = EndpointConfiguration.Create(_config);
             var endpoint = new ConfiguredEndpoint(null, selectedEndpoint, endpointConfiguration);
 

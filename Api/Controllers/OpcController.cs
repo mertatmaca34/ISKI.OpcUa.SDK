@@ -30,7 +30,6 @@ public class OpcController(
                 {
                     ServerStatus = "AlreadyConnected",
                     Message = "Zaten bağlı.",
-                    Data = null
                 });
             }
 
@@ -43,7 +42,6 @@ public class OpcController(
             {
                 ServerStatus = "Good",
                 Message = "Bağlantı kuruldu.",
-                Data = null
             });
         }
         catch (Exception ex)
@@ -53,7 +51,6 @@ public class OpcController(
             {
                 ServerStatus = "Exception",
                 Message = $"Bağlantı kurulamadı: {ex.Message}",
-                Data = null
             });
         }
     }
@@ -94,7 +91,7 @@ public class OpcController(
             ServerStatus = result.ServerStatus,
             Message = result.Message,
             Timestamp = result.Timestamp,
-            Data = null
+            Data = "null"
         };
 
         if (!response.Success)
@@ -131,7 +128,6 @@ public class OpcController(
             {
                 ServerStatus = "Exception",
                 Message = $"Browse işlemi hatası: {ex.Message}",
-                Data = null
             });
         }
     }
@@ -161,7 +157,6 @@ public class OpcController(
             {
                 ServerStatus = "Exception",
                 Message = $"Sunucu keşfi hatası: {ex.Message}",
-                Data = null
             });
         }
     }
@@ -180,7 +175,6 @@ public class OpcController(
             {
                 ServerStatus = "Disconnected",
                 Message = "Bağlantı kesildi.",
-                Data = null
             });
         }
         catch (Exception ex)
@@ -191,7 +185,6 @@ public class OpcController(
             {
                 ServerStatus = "Exception",
                 Message = $"Bağlantı kesilemedi: {ex.Message}",
-                Data = null
             });
         }
     }

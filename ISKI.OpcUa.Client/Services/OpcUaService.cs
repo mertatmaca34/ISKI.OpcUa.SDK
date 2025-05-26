@@ -1,29 +1,18 @@
 ﻿using ISKI.OpcUa.Client.Interfaces;
 using ISKI.OpcUa.Client.Models;
 
-public class OpcUaService : IOpcUaService
+namespace ISKI.OpcUa.Client.Services;
+
+public class OpcUaService(
+    IConnectionService connection,
+    INodeReadWriteService readWrite,
+    INodeBrowseService browser,
+    IDiscoveryService discovery) : IOpcUaService
 {
-    private readonly IConnectionService _connection;
-    private readonly INodeReadWriteService _readWrite;
-    private readonly INodeBrowseService _browser;
-    private readonly IDiscoveryService _discovery;
-
-    public OpcUaService(
-        IConnectionService connection,
-        INodeReadWriteService readWrite,
-        INodeBrowseService browser,
-        IDiscoveryService discovery)
-    {
-        _connection = connection;
-        _readWrite = readWrite;
-        _browser = browser;
-        _discovery = discovery;
-    }
-
-    public Task ConnectAsync(string endpointUrl) => _connection.ConnectAsync(endpointUrl);
-    public Task DisconnectAsync() => _connection.DisconnectAsync();
-    public Task<ConnectionResult<NodeReadResult>> ReadNodeAsync(string nodeId) => _readWrite.ReadNodeAsync(nodeId);
-    public Task WriteNodeAsync(string nodeId, object value, CancellationToken ct) => _readWrite.WriteNodeAsync(nodeId, value, ct);
-    public List<NodeBrowseResult> Browse(string nodeId) => _browser.Browse(nodeId);
-    public Task<List<string>> FindServersOnLocalNetworkAsync() => _discovery.FindServersOnLocalNetworkAsync();
+    public Task ConnectAsync(string endpointUrl) => connection.ConnectAsync(endpointUrl);
+    public Task DisconnectAsync() => connection.DisconnectAsync();
+    public Task<ConnectionResult<NodeReadResult>> ReadNodeAsync(string nodeId) => readWrite.ReadNodeAsync(nodeId);
+    public Task WriteNodeAsync(string nodeId, object value, CancellationToken ct) => readWrite.WriteNodeAsync(nodeId, value, ct);
+    public List<NodeBrowseResult> Browse(string nodeId) => browser.Browse(nodeId);
+    public Task<List<string>> FindServersOnLocalNetworkAsync() => discovery.FindServersOnLocalNetworkAsync();
 }
