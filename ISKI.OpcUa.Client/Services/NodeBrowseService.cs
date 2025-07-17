@@ -3,6 +3,7 @@ using Opc.Ua.Client;
 using Microsoft.Extensions.Logging;
 using ISKI.OpcUa.Client.Interfaces;
 using ISKI.OpcUa.Client.Models;
+using ISKI.OpcUa.Client.Errors;
 
 namespace ISKI.OpcUa.Client.Services;
 
@@ -19,7 +20,7 @@ public class NodeBrowseService(ILogger<NodeBrowseService> logger, IConnectionSer
             return
         [
             new() {
-                DisplayName = "Oturum yok",
+                DisplayName = ErrorMessages.GetMessage(ErrorCode.SessionNotConnected),
                 NodeId = "N/A",
                 NodeClass = "Error"
             }
@@ -72,7 +73,7 @@ public class NodeBrowseService(ILogger<NodeBrowseService> logger, IConnectionSer
             results.Clear();
             results.Add(new NodeBrowseResult
             {
-                DisplayName = $"Hata: {ex.Message}",
+                DisplayName = $"{ErrorMessages.GetMessage(ErrorCode.BrowseFailed)} {ex.Message}",
                 NodeId = nodeId,
                 NodeClass = "Exception"
             });

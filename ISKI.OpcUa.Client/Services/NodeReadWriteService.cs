@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using ISKI.OpcUa.Client.Exceptions;
 using ISKI.OpcUa.Client.Interfaces;
 using ISKI.OpcUa.Client.Models;
+using ISKI.OpcUa.Client.Errors;
 
 namespace ISKI.OpcUa.Client.Services;
 
@@ -15,7 +16,7 @@ public class NodeReadWriteService(ILogger<NodeReadWriteService> logger, IConnect
 
         if (session == null || !session.Connected)
         {
-            var msg = "OPC UA oturumu bağlı değil.";
+            var msg = ErrorMessages.GetMessage(ErrorCode.SessionNotConnected);
             logger.LogWarning("ReadNode - {Message}", msg);
             return new ConnectionResult<NodeReadResult>
             {
@@ -61,7 +62,7 @@ public class NodeReadWriteService(ILogger<NodeReadWriteService> logger, IConnect
         }
         catch (Exception ex)
         {
-            var msg = $"ReadNode exception: {ex.Message}";
+            var msg = $"{ErrorMessages.GetMessage(ErrorCode.ReadFailed)} {ex.Message}";
             logger.LogError(ex, "ReadNode exception: {Message}", ex.Message);
             return new ConnectionResult<NodeReadResult>
             {
@@ -83,7 +84,7 @@ public class NodeReadWriteService(ILogger<NodeReadWriteService> logger, IConnect
 
         if (session == null)
         {
-            var msg = "OPC UA oturumu bağlı değil.";
+            var msg = ErrorMessages.GetMessage(ErrorCode.SessionNotConnected);
             logger.LogWarning("WriteNode - {Message}", msg);
             return new ConnectionResult<object>
             {
@@ -109,7 +110,7 @@ public class NodeReadWriteService(ILogger<NodeReadWriteService> logger, IConnect
                 ServerStatus = status.ToString(),
                 Message = StatusCode.IsGood(status)
                     ? "Yazma işlemi başarılı."
-                    : $"Yazma başarısız. OPC Status: {status}",
+                    : $"{ErrorMessages.GetMessage(ErrorCode.WriteFailed)} OPC Status: {status}",
             };
 
             if (response.Success)
@@ -121,7 +122,7 @@ public class NodeReadWriteService(ILogger<NodeReadWriteService> logger, IConnect
         }
         catch (Exception ex)
         {
-            var msg = $"WriteNode exception: {ex.Message}";
+            var msg = $"{ErrorMessages.GetMessage(ErrorCode.WriteFailed)} {ex.Message}";
             logger.LogError(ex, "WriteNode exception: {Message}", ex.Message);
             return new ConnectionResult<object>
             {

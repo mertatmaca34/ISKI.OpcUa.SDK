@@ -3,6 +3,7 @@ using Opc.Ua.Client;
 using Opc.Ua.Configuration;
 using Microsoft.Extensions.Logging;
 using ISKI.OpcUa.Client.Exceptions;
+using ISKI.OpcUa.Client.Errors;
 using ISKI.OpcUa.Client.Interfaces;
 
 namespace ISKI.OpcUa.Client.Services;
@@ -75,7 +76,7 @@ public class ConnectionService : IConnectionService
         catch (Exception ex)
         {
             _logger.LogError(ex, "OPC UA bağlantı kurulamadı.");
-            throw new OpcServiceException("Bağlantı kurulamadı", ex);
+            throw new OpcServiceException(ErrorMessages.GetMessage(ErrorCode.ConnectionFailed), ex);
         }
     }
 
