@@ -9,5 +9,5 @@ public interface IOpcUaService
     Task<ConnectionResult<NodeReadResult>> ReadNodeAsync(string nodeId);
     Task WriteNodeAsync(string nodeId, object value, CancellationToken cancellationToken);
     List<NodeBrowseResult> Browse(string nodeId);
-    Task<List<string>> FindServersOnLocalNetworkAsync();
+    Task<List<string>> FindServersOnLocalNetworkAsync(string networkPrefix = "192.168.1", int port = 4840);
 }

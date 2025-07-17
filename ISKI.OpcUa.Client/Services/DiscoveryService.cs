@@ -7,17 +7,16 @@ namespace ISKI.OpcUa.Client.Services;
 
 public class DiscoveryService(ILogger<DiscoveryService> logger) : IDiscoveryService
 {
-    public async Task<List<string>> FindServersOnLocalNetworkAsync()
+    public async Task<List<string>> FindServersOnLocalNetworkAsync(string networkPrefix = "192.168.1", int port = 4840)
     {
         var foundServers = new List<string>();
-        var port = 4840;
         var tasks = new List<Task>();
 
-        logger.LogInformation("Yerel ağda OPC sunucuları aranıyor...");
+        logger.LogInformation("Yerel ağ {networkPrefix}.x üzerinde OPC sunucuları aranıyor (port {port})...", networkPrefix, port);
 
         for (int i = 1; i <= 254; i++)
         {
-            string ip = $"192.168.1.{i}";
+            string ip = $"{networkPrefix}.{i}";
             string endpoint = $"opc.tcp://{ip}:{port}";
 
             tasks.Add(Task.Run(async () =>
