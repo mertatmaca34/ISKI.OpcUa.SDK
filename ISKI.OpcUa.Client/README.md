@@ -8,7 +8,7 @@
 dotnet add package ISKI.OpcUa.Client
 ```
 
-> Supports **.NET 6**, **.NET 7**, and **.NET 8**.
+> Supports **.NET 8**.
 
 ---
 
