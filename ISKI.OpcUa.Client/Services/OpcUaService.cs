@@ -16,4 +16,5 @@ public class OpcUaService(
     public List<NodeBrowseResult> Browse(string nodeId) => browser.Browse(nodeId);
     public NodeTreeResult BrowseTree(string nodeId) => browser.BrowseTree(nodeId);
     public Task<List<string>> FindServersOnLocalNetworkAsync() => discovery.FindServersOnLocalNetworkAsync();
+    public Task<List<string>> FindServersOnLocalNetworkAsync(string networkPrefix = "192.168.1", int port = 4840) => discovery.FindServersOnLocalNetworkAsync(networkPrefix, port);
 }

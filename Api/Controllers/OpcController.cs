@@ -163,11 +163,11 @@ public class OpcController(
 
 
     [HttpGet("discover")]
-    public async Task<ActionResult<ConnectionResult<List<string>>>> Discover()
+    public async Task<ActionResult<ConnectionResult<List<string>>>> Discover([FromQuery] string networkPrefix = "192.168.1", [FromQuery] int port = 4840)
     {
         try
         {
-            var servers = await discoveryService.FindServersOnLocalNetworkAsync();
+            var servers = await discoveryService.FindServersOnLocalNetworkAsync(networkPrefix, port);
 
             logger.LogInformation("Discover tamamlandı. Sunucu sayısı: {count}", servers.Count);
 
