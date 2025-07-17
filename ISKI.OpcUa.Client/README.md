@@ -26,9 +26,14 @@ dotnet add package ISKI.OpcUa.Client
 ## 🚀 Quick Start
 
 ```csharp
-using ISKI.OpcUa.Client.Services;
+using ISKI.OpcUa.Client;
 
-var opcClient = new OpcUaService(); // or inject via DI
+var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddIskiOpcUaClient();
+
+var app = builder.Build();
+
+var opcClient = app.Services.GetRequiredService<IOpcUaService>();
 await opcClient.ConnectAsync("opc.tcp://192.168.1.5:4840");
 
 string value = await opcClient.ReadNodeAsync("ns=2;s=Temperature.Tag1");
