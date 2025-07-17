@@ -1,5 +1,6 @@
 ﻿using ISKI.OpcUa.Client.Interfaces;
 using ISKI.OpcUa.Client.Models;
+using ISKI.OpcUa.Client.Errors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using static System.Runtime.InteropServices.JavaScript.JSType;
@@ -29,7 +30,7 @@ public class OpcController(
                 return Ok(new ConnectionResult<object>
                 {
                     ServerStatus = "AlreadyConnected",
-                    Message = "Zaten bağlı.",
+                    Message = ErrorMessages.GetMessage(ErrorCode.AlreadyConnected),
                 });
             }
 
@@ -50,7 +51,7 @@ public class OpcController(
             return StatusCode(500, new ConnectionResult<object>
             {
                 ServerStatus = "Exception",
-                Message = $"Bağlantı kurulamadı: {ex.Message}",
+                Message = $"{ErrorMessages.GetMessage(ErrorCode.ConnectionFailed)} {ex.Message}",
             });
         }
     }
@@ -127,7 +128,7 @@ public class OpcController(
             return StatusCode(500, new ConnectionResult<List<NodeBrowseResult>>
             {
                 ServerStatus = "Exception",
-                Message = $"Browse işlemi hatası: {ex.Message}",
+                Message = $"{ErrorMessages.GetMessage(ErrorCode.BrowseFailed)} {ex.Message}",
             });
         }
     }
@@ -156,7 +157,7 @@ public class OpcController(
             return StatusCode(500, new ConnectionResult<List<string>>
             {
                 ServerStatus = "Exception",
-                Message = $"Sunucu keşfi hatası: {ex.Message}",
+                Message = $"{ErrorMessages.GetMessage(ErrorCode.DiscoveryFailed)} {ex.Message}",
             });
         }
     }
@@ -184,7 +185,7 @@ public class OpcController(
             return StatusCode(500, new ConnectionResult<object>
             {
                 ServerStatus = "Exception",
-                Message = $"Bağlantı kesilemedi: {ex.Message}",
+                Message = $"{ErrorMessages.GetMessage(ErrorCode.DisconnectFailed)} {ex.Message}",
             });
         }
     }
