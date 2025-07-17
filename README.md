@@ -162,4 +162,4 @@ MIT
 
 ## 🔗 Repository
 
-[GitHub](https://github.com/mertatmaca/ISKI.OpcUa.SDK)
+[GitHub](https://github.com/mertatmaca34/ISKI.OpcUa.SDK)
