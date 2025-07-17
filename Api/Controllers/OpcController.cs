@@ -133,6 +133,34 @@ public class OpcController(
         }
     }
 
+    [HttpGet("tree")]
+    public ActionResult<ConnectionResult<NodeTreeResult>> BrowseTree([FromQuery] string nodeId = "i=85")
+    {
+        try
+        {
+            var tree = browseService.BrowseTree(nodeId);
+
+            logger.LogInformation("BrowseTree: Node {nodeId}", nodeId);
+
+            return Ok(new ConnectionResult<NodeTreeResult>
+            {
+                ServerStatus = "Good",
+                Message = "BrowseTree işlemi başarılı.",
+                Data = tree
+            });
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "BrowseTree hatası.");
+
+            return StatusCode(500, new ConnectionResult<NodeTreeResult>
+            {
+                ServerStatus = "Exception",
+                Message = $"{ErrorMessages.GetMessage(ErrorCode.BrowseFailed)} {ex.Message}",
+            });
+        }
+    }
+
 
     [HttpGet("discover")]
     public async Task<ActionResult<ConnectionResult<List<string>>>> Discover()
