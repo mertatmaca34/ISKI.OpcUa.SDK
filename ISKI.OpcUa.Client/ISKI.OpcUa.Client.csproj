@@ -8,22 +8,26 @@
 		<!-- NuGet Metadata -->
 		<IsPackable>true</IsPackable>
 		<PackageId>ISKI.OpcUa.Client</PackageId>
-		<Version>1.0.0</Version>
+		<Version>1.0.4</Version>
 		<Authors>Mert Atmaca</Authors>
 		<Company>ISKI</Company>
 		<Description>Industrial OPC UA SDK for .NET projects with session, read/write, and browse support.</Description>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<RepositoryUrl>https://github.com/mertatmaca/ISKI.OpcUa.Client</RepositoryUrl>
-		<PackageIcon>icon.png</PackageIcon>
-		<PackageReadmeFile>README.md</PackageReadmeFile>
-		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+               <PackageIcon>icon.png</PackageIcon>
+               <PackageReadmeFile>README.md</PackageReadmeFile>
+               <PackageTags>opc-ua;client;industrial</PackageTags>
+               <RepositoryType>git</RepositoryType>
+               <PublishRepositoryUrl>true</PublishRepositoryUrl>
+               <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 	</PropertyGroup>
 
-	<ItemGroup>
-		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.4" />
-		<PackageReference Include="OPCFoundation.NetStandard.Opc.Ua" Version="1.5.376.213" />
-		<PackageReference Include="OPCFoundation.NetStandard.Opc.Ua.Core" Version="1.5.376.213" />
-	</ItemGroup>
+		<ItemGroup>
+			<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.4" />
+			<PackageReference Include="OPCFoundation.NetStandard.Opc.Ua" Version="1.5.376.213" />
+			<PackageReference Include="OPCFoundation.NetStandard.Opc.Ua.Core" Version="1.5.376.213" />
+			<PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
+		</ItemGroup>
 
         <ItemGroup>
                 <Folder Include="Certificates\Own\" />
