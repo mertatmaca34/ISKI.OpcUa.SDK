@@ -36,10 +36,15 @@ dotnet add package ISKI.OpcUa.Client
 
 ## 🚀 Quick Example
 
-### Register Services in Program.cs:
+### Register Services in Program.cs
+
+Add the library via the extension method to register all required services.
 
 ```csharp
-builder.Services.AddSingleton<IOpcUaService, OpcUaService>();
+using ISKI.OpcUa.Client;
+
+var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddIskiOpcUaClient();
 ```
 
 ### Connect to a server:
