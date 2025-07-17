@@ -25,12 +25,16 @@
 		<PackageReference Include="OPCFoundation.NetStandard.Opc.Ua.Core" Version="1.5.376.213" />
 	</ItemGroup>
 
-	<ItemGroup>
-		<Folder Include="Certificates\Own\" />
-		<Folder Include="Certificates\Rejected\" />
-		<Folder Include="Certificates\TrustedPeers\" />
-		<Folder Include="Certificates\Issuers\" />
-	</ItemGroup>
+        <ItemGroup>
+                <Folder Include="Certificates\Own\" />
+                <Folder Include="Certificates\Rejected\" />
+                <Folder Include="Certificates\TrustedPeers\" />
+                <Folder Include="Certificates\Issuers\" />
+        </ItemGroup>
+
+        <ItemGroup>
+                <Content Include="Certificates\**\*" Pack="true" PackagePath="Certificates\" CopyToOutputDirectory="PreserveNewest" />
+        </ItemGroup>
 
 	<ItemGroup>
 		<None Include="README.md" Pack="true" PackagePath="" />
