@@ -26,7 +26,7 @@ dotnet add package ISKI.OpcUa.Client
 - ✅ OPC UA Session management with certificate support  
 - ✅ Read & Write to node values  
 - ✅ Browse server nodes (with metadata)  
-- ✅ Discover servers on local network  
+- ✅ Discover servers on local network with configurable range
 - ✅ Structured, consistent response models with `ConnectionResult<T>`  
 - ✅ Full integration with ASP.NET Core Dependency Injection  
 - ✅ Built-in logging support with `ILogger`
@@ -71,6 +71,18 @@ foreach (var node in nodes)
     Console.WriteLine($"{node.DisplayName} [{node.NodeClass}] - {node.NodeId}");
 }
 ```
+
+### Discover servers:
+
+```csharp
+List<string> servers = await opcUaService.FindServersOnLocalNetworkAsync("192.168.100", 4840);
+foreach (var server in servers)
+{
+    Console.WriteLine(server);
+}
+```
+
+Network prefix and port are configurable to match your local setup.
 
 ---
 
