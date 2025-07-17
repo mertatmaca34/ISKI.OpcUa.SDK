@@ -30,6 +30,7 @@ dotnet add package ISKI.OpcUa.Client
 - ✅ Structured, consistent response models with `ConnectionResult<T>`  
 - ✅ Full integration with ASP.NET Core Dependency Injection  
 - ✅ Built-in logging support with `ILogger`
+- ✅ Automatically creates certificate directories if missing
 
 ---
 
@@ -83,6 +84,12 @@ foreach (var server in servers)
 ```
 
 Network prefix and port are configurable to match your local setup.
+
+### Certificate Directories
+
+`ConnectionService` stores certificates under the `Certificates` folder of the
+project. Subdirectories for `Own`, `TrustedPeers`, `Issuers` and `Rejected` are
+created automatically if they do not already exist at runtime.
 
 ---
 

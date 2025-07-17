@@ -1,6 +1,7 @@
 ﻿using Opc.Ua;
 using Opc.Ua.Client;
 using Opc.Ua.Configuration;
+using System.IO;
 using Microsoft.Extensions.Logging;
 using ISKI.OpcUa.Client.Exceptions;
 using ISKI.OpcUa.Client.Errors;
@@ -54,6 +55,22 @@ public class ConnectionService : IConnectionService
             TransportQuotas = new TransportQuotas { OperationTimeout = 15000 },
             ClientConfiguration = new ClientConfiguration { DefaultSessionTimeout = 60000 }
         };
+
+        var certPaths = new[]
+        {
+            _config.SecurityConfiguration.ApplicationCertificate.StorePath,
+            _config.SecurityConfiguration.TrustedPeerCertificates.StorePath,
+            _config.SecurityConfiguration.TrustedIssuerCertificates.StorePath,
+            _config.SecurityConfiguration.RejectedCertificateStore.StorePath
+        };
+
+        foreach (var path in certPaths)
+        {
+            if (!string.IsNullOrWhiteSpace(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+        }
 
         _config.Validate(ApplicationType.Client).Wait();
         _logger.LogInformation("OPC UA ApplicationConfiguration oluşturuldu.");
